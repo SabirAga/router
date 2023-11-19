@@ -9,7 +9,7 @@ export const NewEventPage = () => {
   );
 };
 
-export const action = async ({request, params}) => {
+export const action = async ({ request, params }) => {
   const data = await request.formData();
   const eventData = {
     title: data.get("title"),
@@ -26,9 +26,13 @@ export const action = async ({request, params}) => {
     body: JSON.stringify(eventData),
   });
 
-  if (!response.ok) {
-    throw json({ message: 'Could not save event.' }, { status: 500 });
+  if (response.status === 422) {
+    return response;
   }
 
- return redirect('/events')
+  if (!response.ok) {
+    throw json({ message: "Could not save event." }, { status: 500 });
+  }
+
+  return redirect("/events");
 };
